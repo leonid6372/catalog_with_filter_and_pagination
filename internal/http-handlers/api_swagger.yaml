@@ -1,0 +1,180 @@
+openapi: 3.0.3
+info:
+  title: Catalog
+  version: 0.0.1
+paths:
+  /new:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                regNum:
+                  type: string
+              required:
+                - regNum
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /delete:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                carId:
+                  type: integer
+              required:
+                - carId
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /edit:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                carId:
+                  type: integer
+                regNum:
+                  type: string
+                mark:
+                  type: string
+                model:
+                  type: string
+                year:
+                  type: integer
+                owner:
+                  $ref: '#/components/schemas/Person'
+              required:
+                - carId
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad request
+        '500':
+          description: Internal server error
+  /catalog:
+    get:
+      parameters:
+        - name: carId
+          in: query
+          schema:
+            type: integer
+        - name: regNum
+          in: query
+          schema:
+            type: string
+        - name: mark
+          in: query
+          schema:
+            type: string
+        - name: model
+          in: query
+          schema:
+            type: string
+        - name: year
+          in: query
+          schema:
+            type: integer
+        - name: owner.name
+          in: query
+          schema:
+            type: string
+        - name: owner.surname
+          in: query
+          schema:
+            type: string
+        - name: owner.patronymic
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogResp'
+        '400':
+          description: Bad request
+          content:
+            text:
+              schema:
+                type: string
+                example: "Error: selected page in out of range"
+        '500':
+          description: Internal server error
+components:
+  schemas:
+    Car:
+      type: object
+      properties:
+        carID:
+          type: integer
+        regNum:
+          type: string
+        mark:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+        owner:
+          $ref: '#/components/schemas/Person'
+    Person:
+      type: object
+      properties:
+        personId:
+          type: integer
+        name:
+          type: string
+        surname:
+          type: string
+        patronymic:
+          type: string
+    Paginator:
+      type: object
+      properties:
+        next:
+         type: integer
+        previous:
+         type: integer
+        recordPerPage:
+         type: integer
+        currentPage:
+         type: integer
+        totalPage:
+         type: integer
+    CatalogResp:
+      type: object
+      properties:
+        cars:
+          type: array
+          items:
+            $ref: '#/components/schemas/Car'
+        paginator:
+          $ref: '#/components/schemas/Paginator'
