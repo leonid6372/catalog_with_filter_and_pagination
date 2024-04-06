@@ -1,0 +1,2 @@
+migration files: internal/storage/migrations/000001_templates.up.sql and 000001_templates.down.sql
+swagger file: internal/http-handlers/api_swagger.yaml
